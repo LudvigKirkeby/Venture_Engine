@@ -40,11 +40,11 @@ public class Initialise_Locations {
                         }
                         actions.add(new Action(action_desc, action_keyword, action_result, action_stats));
                     }
-                    l = new Location(location_name, location_desc, actions);
+                   // l = new Location(location_name, location_desc, actions);
                 } else if (n.has("fight")) {
 
                 } else {
-                    l = new Location(location_name, location_desc);
+                   // l = new Location(location_name, location_desc);
                 }
                 location_map.put(location_name, l);
                 locations.add(l);

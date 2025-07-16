@@ -1,13 +1,17 @@
 package com.example.venture_engine;
 
+import java.util.HashMap;
+
 import com.example.venture_engine.Datastructures.Location;
+
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 
 public class Controller {
     private double last_x = 0;
@@ -31,8 +35,7 @@ public class Controller {
 
                 Point2D world = view.getGroupNodes().sceneToLocal(sceneX, sceneY);
 
-                Circle c = new Circle(world.getX(), world.getY(), 20, Color.BLUE); // Should be Location nodes
-                view.getGroupNodes().getChildren().add(c);
+                locationInputPopup(world);
 
             } else if (e.getButton() == MouseButton.SECONDARY) {
                 last_x = e.getX();
@@ -67,6 +70,60 @@ public class Controller {
 
     public void addLocation(Location location) {
         view.getGroupNodes().getChildren().add(location);
+    }
+
+    public void locationInputPopup(Point2D world) { 
+        Popup location_input_popup = new Popup();
+                VBox location_input_popup_vbox = new VBox(10);
+
+                location_input_popup_vbox.setStyle("-fx-background-color: white; -fx-border-color: black;");
+                location_input_popup_vbox.setPadding(new Insets(10));
+                
+                TextField location_name = new TextField();
+                location_name.setPromptText("Location Name...");
+                
+                TextField location_description = new TextField();
+                location_description.setPromptText("Location Description...");
+                
+                // should have the option to add multiple actions, should be returned as a list
+                TextField location_actions = new TextField();
+                location_actions.setPromptText("Location Actions...");
+                
+                location_input_popup_vbox.getChildren().addAll(location_name, location_description, location_actions);
+
+        
+                location_input_popup.getContent().add(location_input_popup_vbox);
+                
+            
+                location_input_popup_vbox.setOnKeyPressed(b -> {
+                    if (b.getCode() == KeyCode.ENTER) {
+                        b.consume();
+                        location_input_popup.hide();
+                        String n = location_name.getText();
+                        String d = location_description.getText();
+
+
+                        // HashMap<String, String> a = location_actions.getText(); Actions should be a hashmap, that is, a trigger key and a reaction. Could include value changes?
+
+                        
+                        if (n != null && d != null) {
+                            Location location = new Location(world.getX(), world.getY(), n, d);
+                            view.getGroupNodes().getChildren().add(location);
+                        }
+                    }
+                });
+
+                location_input_popup.show(view.getStage());
+
+                view.getClearButton().setDisable(true);
+
+                // 2) when the popup hides, re‑enable it
+                location_input_popup.setOnHidden(ev -> {
+                    view.getClearButton().setDisable(false);
+                });
+
+                location_input_popup.setAutoHide(true);
+
     }
 
     public void setView(View view) { this.view = view; }

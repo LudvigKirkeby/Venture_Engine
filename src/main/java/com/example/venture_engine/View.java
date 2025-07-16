@@ -29,6 +29,7 @@ public class View {
     Affine trans;
     private Canvas canvas;
     private Controller controller;
+    private Stage stage;
     Button clearButton;
     StackPane root;
     Group nodeGroup; // Should be moved to Model since Model holds all data
@@ -42,7 +43,7 @@ public class View {
     }
 
     public void initialize(Stage stage) throws IOException {
-        System.out.println("T" + screenWidth);
+        this.stage = stage;
 
         stage.setWidth(screenWidth);
         stage.setHeight(screenHeight);
@@ -81,6 +82,7 @@ public class View {
 
         HBox topArea = new HBox(10);
         clearButton = new Button("Clear");
+        clearButton.setDefaultButton(false);
 
         topArea.getChildren().add(clearButton);
 
@@ -102,4 +104,6 @@ public class View {
     public Button getClearButton() { return clearButton; }
 
     public Group getGroupNodes() { return nodeGroup; }
+
+    public Stage getStage() { return stage; }
 }
